@@ -4,6 +4,7 @@ import 'package:personal_expense_tracker/themes/dark.dart';
 import 'package:personal_expense_tracker/themes/light.dart';
 import 'package:personal_expense_tracker/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:personal_expense_tracker/data/expense_data.dart';
 
 
 void main() {
@@ -20,11 +21,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-    
-    return MaterialApp(
-      home: HomePage(),
-      theme: lightMode,
+    return ChangeNotifierProvider(
+      create: (context) => ExpenseData(),
+      builder: (context, child) => const MaterialApp(
+        home: HomePage(),
+      ),
     );
   }
 }
