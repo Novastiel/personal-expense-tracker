@@ -90,15 +90,16 @@ class ExpenseSum extends StatelessWidget {
           //total for week
           Padding(
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
-            child: NeuBox(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: NeuBox(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Week Total: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 136, 0)),
                     ),
                 
-                    Text(style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 255, 136, 0)), '\₱${weekTotal(value, sunday, monday, tuesday, 
+                    Text(style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 255, 136, 0)), '₱${weekTotal(value, sunday, monday, tuesday, 
                     wednesday, thursday, friday, saturday)}'), 
                   ],
                 ),

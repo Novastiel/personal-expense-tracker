@@ -110,7 +110,7 @@ Widget getBottomTitles(double value, TitleMeta axisSide) {
       text = const Text('W', style: style);
       break;
     case 4:
-      text = const Text('TH', style: style);
+      text = const Text('T', style: style);
       break;
     case 5:
       text = const Text('F', style: style);
