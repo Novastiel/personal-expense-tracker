@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/data/expense_sum.dart';
 import 'package:personal_expense_tracker/models/expenses.dart';
-import 'package:personal_expense_tracker/themes/theme_provider.dart';
+import 'package:personal_expense_tracker/views/expense_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:personal_expense_tracker/data/expense_data.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,7 +16,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //editing control
   final newExpenseNameController = TextEditingController();
-  final newExpenseAmountController = TextEditingController();
+  final newExpensePesosController = TextEditingController();
+  final newExpenseCentavosController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    //prepare and display on startup
+    Provider.of<ExpenseData>(context, listen: false).prepareData();
+  }
 
 
   //add
@@ -29,14 +40,41 @@ class _HomePageState extends State<HomePage> {
             //name
             TextField(
               controller: newExpenseNameController,
+              decoration: const InputDecoration(
+                hintText: "Expense Name",
+                
+              ),
             ),
 
             //amount
-            TextField(
-              controller: newExpenseAmountController,
+            Row(
+              children: [
+                //pesos
+                Expanded(
+                  child: TextField(
+                    controller: newExpensePesosController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: "Pesos"
+                    ),
+                  ),
+                ),
+
+                //centavos
+                Expanded(
+                  child: TextField(
+                    controller: newExpenseCentavosController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: "Centavos"
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
+        
         actions: [
           //save
           MaterialButton(
@@ -58,10 +96,13 @@ class _HomePageState extends State<HomePage> {
 
   //save
   void save() {
+    //combine into a string
+    String amount = '${newExpensePesosController.text}.${newExpenseCentavosController.text}';
+
     //create expense item
     Expense newExpense = Expense(
       name: newExpenseNameController.text,
-      amount: newExpenseAmountController.text,
+      amount: amount,
       dateTime: DateTime.now(),
     );
 
@@ -69,6 +110,11 @@ class _HomePageState extends State<HomePage> {
 
     Navigator.pop(context);
     clear();
+  }
+
+  //delete
+  void deleteExpense(Expense expense) {
+    Provider.of<ExpenseData>(context, listen: false).deleteExpense(expense);
   }
 
   //cancel
@@ -80,8 +126,10 @@ class _HomePageState extends State<HomePage> {
   //clear
   void clear() {
     newExpenseNameController.clear();
-    newExpenseAmountController.clear();
+    newExpensePesosController.clear();
+    newExpenseCentavosController.clear();
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -89,24 +137,33 @@ class _HomePageState extends State<HomePage> {
       builder: (context, value, child) => Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
+          backgroundColor: Color.fromARGB(255, 255, 161, 38),
           onPressed: addnewExpense,
           child: Icon (Icons.add),
-          ),
-
-        body : ListView.builder(
-          itemCount: value.getAllExpenseList().length,
-          itemBuilder: (context, index) => ListTile(
-            title: Text(value.getAllExpenseList()[index].name),
-            subtitle: Text(value.getAllExpenseList()[index].dateTime.toString()),
-            trailing: Text(
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              '\$' + value.getAllExpenseList()[index].amount, 
-            ),
-          ),
         ),
+        body : ListView(children: [
+          
+          const SizedBox(height: 35),
+          
+          //weekly sum
+          ExpenseSum(startOfWeek: value.startOfWeekDate()),
+
+          const SizedBox(height: 35),
+
+          //expense list
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: value.getAllExpenseList().length,
+            itemBuilder: (context, index) => ExpenseTile(
+              name: value.getAllExpenseList()[index].name, 
+              amount: value.getAllExpenseList()[index].amount, 
+              dateTime: value.getAllExpenseList()[index].dateTime,
+              deleteTapped: (p0) => 
+                deleteExpense(value.getAllExpenseList()[index]),
+            ),
+          )
+        ]),
       ),
     );
   }

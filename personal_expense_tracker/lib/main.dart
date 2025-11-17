@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personal_expense_tracker/pages/home_page.dart';
 import 'package:personal_expense_tracker/themes/dark.dart';
-import 'package:personal_expense_tracker/themes/light.dart';
-import 'package:personal_expense_tracker/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:personal_expense_tracker/data/expense_data.dart';
+import 'package:personal_expense_tracker/themes/theme_provider.dart';
 
 
-void main() {
+void main() async {
+  //init hive
+  await Hive.initFlutter();
+
+  //open hive
+  await Hive.openBox("database");
+
+
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    /* const MainApp() */
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
       child: const MainApp(),
-    )
-  );
+      )
+    );
 }
 
 class MainApp extends StatelessWidget {
@@ -23,8 +34,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => ExpenseData(),
-      builder: (context, child) => const MaterialApp(
+      builder: (context, child) => MaterialApp(
         home: HomePage(),
+        theme: darkMode,
       ),
     );
   }

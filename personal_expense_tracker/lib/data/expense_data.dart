@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/data/hivedb.dart';
 import 'package:personal_expense_tracker/models/expenses.dart';
 import 'package:personal_expense_tracker/datetime/date_time.dart';
 
@@ -11,11 +12,21 @@ class ExpenseData extends ChangeNotifier{
     return overallExpenseList;
   }
 
+  //display original data
+  final db = HiveDB();
+  void prepareData() {
+    if (db.readData().isNotEmpty) {
+      overallExpenseList = db.readData();
+    }
+
+  }
+
   //add
   void addNewExpense(Expense newExpense) {
     overallExpenseList.add(newExpense);
 
     notifyListeners();
+    db.saveData(overallExpenseList);
   }
 
   //delete

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/themes/dark.dart';
-import 'package:personal_expense_tracker/themes/light.dart';
+/* import 'package:personal_expense_tracker/themes/light.dart'; */
 
 
 class ThemeProvider extends ChangeNotifier {
@@ -22,11 +22,11 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   //toggle
-  void toggleTheme() {
+/*   void toggleTheme() {
     if (_themeData == lightMode) {
       themeData = darkMode;
     } else {
       themeData = lightMode;
     }
-  }
+  } */
 }
