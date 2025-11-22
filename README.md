@@ -66,7 +66,7 @@ A Intermediate Application for Personal Expense Tracker
 - Text, 
 - BuildContext
 
-**views.zip/views/neubox.dart	(3 Widgets)**
+**/views/neubox.dart	(3 Widgets)**
 - NeuBox, 
 - StatelessWidget, 
 - Container, 
